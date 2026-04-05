@@ -24,9 +24,10 @@ const RefreshButton = memo(function RefreshButton({ onClick, loading }) {
     <button
       onClick={onClick}
       disabled={loading}
-      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700
-                 text-white font-medium rounded-lg shadow-sm transition-colors
-                 disabled:bg-blue-400 disabled:cursor-not-allowed"
+      className="inline-flex items-center gap-2 px-4 py-2 bg-wise-green
+                 text-wise-green-dark font-semibold rounded-pill transition-transform
+                 hover:scale-105 active:scale-95
+                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
     >
       {/* Rule 6.1: Animate wrapper div instead of SVG for hardware acceleration */}
       <div className={loading ? 'animate-spin' : ''}>
