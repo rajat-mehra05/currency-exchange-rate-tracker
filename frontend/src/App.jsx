@@ -58,6 +58,14 @@ export default function App() {
     fetchRates(baseCurrency);
   }, [baseCurrency, fetchRates]);
 
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchRates(baseCurrency);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [baseCurrency, fetchRates]);
+
   const handleCurrencyChange = (newCurrency) => {
     setBaseCurrency(newCurrency);
   };
@@ -75,7 +83,7 @@ export default function App() {
             Exchange Rates
           </h1>
           <p className="text-gray-600">
-            Live currency exchange rates from the European Central Bank
+            Live currency exchange rates aggregated from multiple sources
           </p>
         </div>
 
@@ -125,7 +133,7 @@ export default function App() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-gray-500">
-          Data source: European Central Bank via Frankfurter API
+          Data aggregated from multiple sources. Auto-refreshes every 30 seconds.
         </div>
       </div>
     </div>
