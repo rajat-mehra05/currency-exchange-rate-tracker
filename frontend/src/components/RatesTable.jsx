@@ -24,14 +24,14 @@ const DEFAULT_CURRENCY = { name: 'Unknown', flag: '💱' };
 
 // Rule 6.3: Hoist static JSX elements
 const emptyState = (
-  <div className="text-center text-gray-500 py-8">
+  <div className="text-center text-wise-gray py-8">
     No rates available for this currency.
   </div>
 );
 
 // Rule 6.3: Hoist static table header (without dynamic baseCurrency)
 const tableHeaderCurrency = (
-  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+  <th className="px-4 sm:px-6 py-4 text-left text-xs font-semibold text-wise-gray uppercase tracking-wider">
     Currency
   </th>
 );
@@ -42,18 +42,18 @@ const RateRow = memo(function RateRow({ code, rate }) {
   const currencyData = CURRENCY_DATA.get(code) || DEFAULT_CURRENCY;
 
   return (
-    <tr className="hover:bg-gray-50 transition-colors">
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center gap-3">
-          <span className="text-xl">{currencyData.flag}</span>
+    <tr className="hover:bg-wise-green-light transition-colors">
+      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-lg sm:text-xl">{currencyData.flag}</span>
           <div>
-            <div className="text-sm font-medium text-gray-900">{code}</div>
-            <div className="text-sm text-gray-500">{currencyData.name}</div>
+            <div className="text-sm font-semibold text-wise-black">{code}</div>
+            <div className="text-xs sm:text-sm text-wise-gray">{currencyData.name}</div>
           </div>
         </div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-right">
-        <span className="text-lg font-semibold text-gray-900">
+      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right">
+        <span className="text-base sm:text-lg font-semibold text-wise-black">
           {rate.toFixed(4)}
         </span>
       </td>
@@ -71,17 +71,17 @@ const RatesTable = memo(function RatesTable({ rates, baseCurrency }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+    <div className="overflow-hidden rounded-card-lg shadow-[rgba(14,15,12,0.12)_0_0_0_1px]">
+      <table className="min-w-full divide-y divide-wise-surface">
+        <thead className="bg-wise-surface">
           <tr>
             {tableHeaderCurrency}
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-4 sm:px-6 py-4 text-right text-xs font-semibold text-wise-gray uppercase tracking-wider">
               Rate (1 {baseCurrency})
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white divide-y divide-wise-surface">
           {entries.map(([code, rate]) => (
             <RateRow key={code} code={code} rate={rate} />
           ))}
