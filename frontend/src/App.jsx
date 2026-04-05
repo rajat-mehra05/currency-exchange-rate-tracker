@@ -5,8 +5,6 @@ import FreshnessIndicator from './components/FreshnessIndicator';
 import RefreshButton from './components/RefreshButton';
 import ErrorBanner from './components/ErrorBanner';
 import LoadingSkeleton from './components/LoadingSkeleton';
-import { Agentation } from 'agentation';
-
 const API_BASE = import.meta.env.DEV ? 'http://localhost:3001' : '';
 
 // Rule 6.3: Hoist static JSX elements outside component
@@ -152,7 +150,6 @@ export default function App() {
         </div>
       </div>
     </div>
-    {import.meta.env.DEV && <Agentation />}
   </>
   );
 }
