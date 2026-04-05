@@ -2,10 +2,7 @@
   "name": "exchange-rates-backend",
   "version": "1.0.0",
   "type": "module",
-  "engines": {
-    "node": "20.x"
-  },
-  "scripts": {
+"scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
     "vercel-build": "echo 'Build complete'"
