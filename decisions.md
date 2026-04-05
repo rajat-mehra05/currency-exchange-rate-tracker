@@ -1,15 +1,18 @@
 # Decisions & Reasoning
 
-## API Choice: Frankfurter
+## API Choice: Frankfurter + Open Exchange Rates
 
-**Decision:** Use Frankfurter API (api.frankfurter.dev) as the sole data source.
+**Decision:** Aggregate data from two free API sources for redundancy and accuracy.
+
+**Sources:**
+- **Frankfurter API** (api.frankfurter.dev) — ECB data, ~30 currencies, no key required
+- **Open Exchange Rates** (open.er-api.com) — 150+ currencies, no key required
 
 **Reasoning:**
-- No API key required = zero setup friction
-- No request limits for reasonable use
-- ECB (European Central Bank) data is authoritative and trusted
-- Simple JSON response format
-- Trade-off: Only ~30 currencies, updates daily (not real-time). Acceptable for demo.
+- Two independent sources provide resilience — if one goes down, the other carries the response
+- Averaging rates from both sources reduces the impact of any single source's quirks
+- Both are free with no API key = zero setup friction
+- Trade-off: Both update daily (not real-time). Acceptable for free tier.
 
 **Rejected alternatives:**
 - CurrencyFreaks: Requires account, 1,000 req/month limit could hit during dev
@@ -19,23 +22,26 @@
 
 ## Fallback Strategy
 
-**Decision:** Cache-only fallback. No secondary API.
+**Decision:** Dual-source with cache fallback — three layers of resilience.
 
 **Reasoning:**
-- With 30 min constraint, integrating multiple APIs adds complexity
-- If Frankfurter fails, serve stale cached data with a warning banner
+- Both sources are fetched in parallel with `Promise.allSettled`
+- If one source fails, the other provides rates independently
+- If both fail, serve stale cached data with a warning banner
 - Users see "rates may be delayed" rather than a broken page
-- Trade-off: No fresh data if API is down for extended period. Acceptable for demo.
+- Three layers: source redundancy → cache → error state
 
 ---
 
 ## Handling Conflicting Data
 
-**Decision:** N/A - single source of truth.
+**Decision:** Average rates from both sources when both respond; use whichever is available if one fails.
 
 **Reasoning:**
-- Using only Frankfurter, so no conflicting data scenario
-- If we had multiple sources, we'd prefer ECB (central bank) over commercial sources
+- Frankfurter (ECB data) and Open Exchange Rates may differ slightly due to timing and source methodology
+- Averaging reduces the impact of any single source's quirks
+- Response includes a `sources` array so the frontend knows which sources contributed
+- If only one source responds, its rate is used directly — no artificial adjustment
 
 ---
 
@@ -72,14 +78,12 @@
 
 ---
 
-## Scope Cuts (to ship in 30 min)
+## Scope Cuts (to ship in 60 min)
 
 | Cut | Why |
 |-----|-----|
-| Auto-refresh | Manual refresh demonstrates the pattern; saves state complexity |
 | shadcn/ui | Setup overhead; Tailwind-only is faster |
 | All 30+ currencies | Top 15 keeps UI clean |
-| Multiple API sources | Cache fallback is enough |
 | Persistent storage | In-memory cache is fine for demo |
 | Rate change indicators | Nice-to-have, not core |
 
@@ -87,12 +91,11 @@
 
 ## What I'd Add With More Time
 
-1. **Auto-refresh** (60s interval with pause on tab blur)
-2. **Second API source** for true failover
-3. **Currency search/filter** for better UX
-4. **localStorage** to persist favorites
-5. **Sparklines** for historical trends
-6. **Rate alerts** (push notifications)
+1. **Pause auto-refresh on tab blur** to save unnecessary API calls
+2. **Currency search/filter** for better UX
+3. **localStorage** to persist favorites
+4. **Sparklines** for historical trends
+5. **Rate alerts** (push notifications)
 
 ---
 
